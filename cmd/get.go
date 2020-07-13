@@ -80,9 +80,9 @@ func print_anno_node(cmd *cobra.Command, ctx context.Context, cli k8sclient.Cli,
 			cmd.Help()
 			return
 
-		cli.AnnoNodePrint(nodelist, ctx, annotationMap, nodelabel)
 	}
 
+	cli.AnnoNodePrint(nodelist, ctx, annotationMap, nodelabel)
 }
 
 func init() {
