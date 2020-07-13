@@ -3,7 +3,6 @@ package k8sclient
 import (
 	"context"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/table"
@@ -13,12 +12,10 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"kubectl-addons/pkg/utils"
 	"os"
-	"path/filepath"
 )
 
 var (
 	kubeconfig *string
-	Printer    = utils.PrintColor{}
 )
 
 type Cli struct {
@@ -26,14 +23,14 @@ type Cli struct {
 }
 
 // init k8sClient
-func Initcli() (Cli, error) {
+func Initcli(kubeconfig *string) (Cli, error) {
 
-	if home := homeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, "kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
+	//if home := homeDir(); home != "" {
+	//	kubeconfig = flag.String("kubeconfig", filepath.Join(home, "kube", "config"), "(optional) absolute path to the kubeconfig file")
+	//} else {
+	//	kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	//}
+	//flag.Parse()
 
 	fmt.Println(*kubeconfig)
 	// use the current context in kubeconfig
@@ -135,7 +132,7 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 		s = fmt.Sprintf("k8s nodes containing %s is", string(annotaionstring))
 	}
 
-	Printer.Normal().Println(color.BlueString(s))
+	utils.Printer.Normal().Println(color.BlueString(s))
 	t.AppendFooter(table.Row{"", "Total NOde", len(nodelist), ""})
 	t.Render()
 

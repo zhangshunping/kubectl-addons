@@ -20,13 +20,16 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"kubectl-addons/pkg/k8sclient"
 	"os"
 )
 
 var (
-	cfgFile   string
-	nodelabel string
-	namespace string
+	cfgFile    string
+	nodelabel  string
+	namespace  string
+	kubeconfig string
+	cli        k8sclient.Cli
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -34,9 +37,12 @@ var RootCmd = &cobra.Command{
 	Use:   "kubectl-addons",
 	Short: "kubectl Educoder resouce operater",
 	Long:  ``,
-	Args: cobra.ExactArgs(1),
+	Args:  cobra.ExactArgs(1),
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		cli, _ = k8sclient.Initcli(&kubeconfig)
+	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
@@ -57,24 +63,15 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
 	RootCmd.SuggestionsMinimumDistance = 1
-
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kubectl-addons.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-
 	RootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "default", "-n default")
+	RootCmd.PersistentFlags().StringVarP(&kubeconfig, "kubeconfig", "k", "/root/.kube/config", "-k C:/Users/39295/kube/config")
 	RootCmd.PersistentFlags().StringVarP(&nodelabel, "nodeslector", "l", "", "-l type=others")
 	RootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
 	viper.BindPFlag("author", RootCmd.PersistentFlags().Lookup("author"))
 	viper.BindPFlag("useViper", RootCmd.PersistentFlags().Lookup("viper"))
-	viper.SetDefault("author", "NAME HERE <EMAIL ADDRESS>")
+	viper.SetDefault("author", "zhangshunping")
 	viper.SetDefault("license", "apache")
 }
 

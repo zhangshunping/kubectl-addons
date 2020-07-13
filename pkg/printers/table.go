@@ -1,9 +1,9 @@
 package priters
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
-	"errors"
 )
 
 type bd struct {

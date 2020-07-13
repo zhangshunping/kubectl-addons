@@ -18,6 +18,7 @@ package cmd
 import (
 	"context"
 	"encoding/json"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	v1 "k8s.io/api/core/v1"
 	"kubectl-addons/pkg/k8sclient"
@@ -33,8 +34,8 @@ var (
 var getCmd = &cobra.Command{
 	Use:   "get",
 	Short: "get k8s node resouces",
-	Long: ``,
-	Args: cobra.ExactArgs(1),
+	Long:  ``,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) == 0 {
@@ -54,11 +55,11 @@ var nodeannoCmd = &cobra.Command{
 		annotationMap := make(map[string]string)
 		ctx, cancle := context.WithCancel(context.TODO())
 		defer cancle()
-		cli, _ := k8sclient.Initcli()
-		if 0 !=len(annotaion){
+		if 0 != len(annotaion) {
 			print_anno_node(cmd, ctx, cli, annotationMap, nodelabel)
+		} else {
+			utils.Printer.Err().Printf(color.CyanString("'-a' ca|CA|Ca, all|All|ALL"))
 		}
-
 
 	},
 }
@@ -67,18 +68,18 @@ var nodeannoCmd = &cobra.Command{
 func print_anno_node(cmd *cobra.Command, ctx context.Context, cli k8sclient.Cli, annotationMap map[string]string, nodelabel string) {
 	var nodelist []*v1.Node
 
-		switch annotaion {
+	switch annotaion {
 
-		case "ca", "CA", "Ca":
-			annotationMap = utils.AnnotationMap["CA-NoDown"]
-			nodelist, _ = cli.ReturnAnnoNode(ctx, annotationMap, nodelabel, "select")
-		case "all", "All", "ALL":
-			_ = json.Unmarshal([]byte(annotaion), &annotationMap)
-			nodelist, _ = cli.ReturnAnnoNode(ctx, annotationMap, nodelabel, "all")
+	case "ca", "CA", "Ca":
+		annotationMap = utils.AnnotationMap["CA-NoDown"]
+		nodelist, _ = cli.ReturnAnnoNode(ctx, annotationMap, nodelabel, "select")
+	case "all", "All", "ALL":
+		_ = json.Unmarshal([]byte(annotaion), &annotationMap)
+		nodelist, _ = cli.ReturnAnnoNode(ctx, annotationMap, nodelabel, "all")
 
-		default:
-			cmd.Help()
-			return
+	default:
+		cmd.Help()
+		return
 
 	}
 

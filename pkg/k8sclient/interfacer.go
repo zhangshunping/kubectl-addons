@@ -5,13 +5,7 @@ import (
 )
 
 type Interfacer interface {
-
 	ListNode(Labelselector string) (*v1.NodeList, error)
 
-
 	ListPod() (*v1.PodList, error)
-
 }
-
-
-
