@@ -129,21 +129,22 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 }
 
 func rangeNodelist(nodelist []*v1.Node, t table.Writer, annotationMap map[string]string) {
-
+	//j:=0
 	annotaionstring, _ := json.Marshal(annotationMap)
 	for i := 0; i < len(nodelist); i++ {
 		InternalIp := ""
 		ExternalIP := ""
 		items := nodelist[i]
-		if items.Status.Addresses[0].Type == "ExternalIP" {
-			ExternalIP = items.Status.Addresses[0].Address
-			InternalIp = items.Status.Addresses[1].Address
-		} else if items.Status.Addresses[1].Type == "ExternalIP" {
-			ExternalIP = items.Status.Addresses[1].Address
-			InternalIp = items.Status.Addresses[0].Address
-		} else {
-			InternalIp = items.Status.Addresses[0].Address
+		for i:=0;i<len(items.Status.Addresses);i++{
+
+			if items.Status.Addresses[i].Type == "ExternalIP"{
+				ExternalIP = items.Status.Addresses[i].Address
+
+			}
+			InternalIp=items.Status.Addresses[0].Address
 		}
+
+
 		t.AppendRow([]interface{}{i + 1, items.Name, InternalIp, ExternalIP, "Yes", string(annotaionstring)})
 	}
 }
