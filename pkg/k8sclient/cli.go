@@ -122,11 +122,11 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 
 		s = "k8s nodes has annotations:"
 	} else {
-		t.AppendHeader(table.Row{"id", "Nodename", "Nodeip", "exit_or_no", "Given_Annotation"})
+		t.AppendHeader(table.Row{"id", "Nodename","INTERNAL-IP", "EXTERNAL-IP", "exit_or_no", "Given_Annotation"})
 		annotaionstring, _ := json.Marshal(annotationMap)
 		for i := 0; i < len(nodelist); i++ {
 			items := nodelist[i]
-			t.AppendRow([]interface{}{i + 1, items.Name, items.Status.Addresses[0].Address, "Yes", string(annotaionstring)})
+			t.AppendRow([]interface{}{i + 1, items.Name,items.Status.Addresses[1].Address, items.Status.Addresses[0].Address, "Yes", string(annotaionstring)})
 		}
 
 		s = fmt.Sprintf("k8s nodes containing %s is", string(annotaionstring))
