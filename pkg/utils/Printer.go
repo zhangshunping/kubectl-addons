@@ -20,3 +20,6 @@ func (p *PrintColor) Warings() *color.Color {
 func (p *PrintColor) Err() *color.Color {
 	return color.New(color.BgRed)
 }
+func (p *PrintColor) Tips() *color.Color {
+	return color.New(color.FgHiCyan)
+}

@@ -18,6 +18,7 @@ package cmd
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	v1 "k8s.io/api/core/v1"
@@ -49,7 +50,7 @@ var getCmd = &cobra.Command{
 // define node resources
 var nodeannoCmd = &cobra.Command{
 	Use:   "nodeanno",
-	Short: "node resouces",
+	Short: "get node Annotation",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		annotationMap := make(map[string]string)
@@ -62,6 +63,10 @@ var nodeannoCmd = &cobra.Command{
 		}
 
 	},
+	Example: utils.Printer.Tips().Sprintf(color.BlueString(" 1.kubect-addons get nodeanno -a \"CA\"  --> to get ClusterAutoSacler node that not to clam down \n" +
+		"2. kubectl-addons get nodeanno -a \"All\" --> to get all Node Annotation\n" +
+		"3. kubectl-addons get nodeanno -a '{\"flannel.alpha.coreos.com/backend-type\":\"vxlan\"}'  --> to list given Annotation Node  \n" +
+		"4. kubectl-addons get nodeanno -a '{\"cluster-autoscaler.kubernetes.io/scale-down-disabled\":\"true\"}' -k C:/Users/39295/kube/config ",)),
 }
 
 // kubectl-addon get nodeanno  -a "ca，CA，Ca" ===> print annotation node
@@ -76,11 +81,15 @@ func print_anno_node(cmd *cobra.Command, ctx context.Context, cli k8sclient.Cli,
 	case "all", "All", "ALL":
 		_ = json.Unmarshal([]byte(annotaion), &annotationMap)
 		nodelist, _ = cli.ReturnAnnoNode(ctx, annotationMap, nodelabel, "all")
-
-	default:
+	case "":
 		cmd.Help()
+		fmt.Println(cmd.Example)
 		return
-
+	default:
+		str:=[]byte(annotaion)
+		_=json.Unmarshal(str,&annotationMap)
+		fmt.Println(annotationMap)
+		nodelist, _ = cli.ReturnAnnoNode(ctx, annotationMap, nodelabel, "select")
 	}
 
 	cli.AnnoNodePrint(nodelist, ctx, annotationMap, nodelabel)
@@ -90,7 +99,7 @@ func init() {
 	RootCmd.AddCommand(getCmd)
 	getCmd.AddCommand(nodeannoCmd)
 
-	nodeannoCmd.Flags().StringVarP(&annotaion, "annotation", "a", "", " get node  -a '{\"flannel.alpha.coreos.com/backend-type\":\"vxlan\"}'\n ,to list gien node")
+	nodeannoCmd.Flags().StringVarP(&annotaion, "annotation", "a", "", " get nodeanno  -a '{\"flannel.alpha.coreos.com/backend-type\":\"vxlan\"}'\n ,to list gien node")
 
 	// Here you will define your flags and configuration settings.
 
