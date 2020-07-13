@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38a2ae18-b85a-4d70-ab91-ab24f267ca48" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/k8sclient/cli.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/k8sclient/cli.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

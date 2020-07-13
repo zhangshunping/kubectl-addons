@@ -113,12 +113,12 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 	if len(annotationMap) == 0 {
 
 		t.AppendHeader(table.Row{"id", "Nodename", "INTERNAL-IP", "EXTERNAL-IP", "ALl", "Annotations"})
-		rangeNodelist(nodelist, t, annotationMap)
+		rangeNodelist(nodelist, t, annotationMap,"all")
 		s = "k8s nodes has annotations:"
 	} else {
 		t.AppendHeader(table.Row{"id", "Nodename", "INTERNAL-IP", "EXTERNAL-IP", "exit_or_no", "Given_Annotation"})
 		annotaionstring, _ := json.Marshal(annotationMap)
-		rangeNodelist(nodelist, t, annotationMap)
+		rangeNodelist(nodelist, t, annotationMap,"")
 		s = fmt.Sprintf("k8s nodes containing %s is", string(annotaionstring))
 	}
 
@@ -128,7 +128,7 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 
 }
 
-func rangeNodelist(nodelist []*v1.Node, t table.Writer, annotationMap map[string]string) {
+func rangeNodelist(nodelist []*v1.Node, t table.Writer, annotationMap map[string]string ,choice string) {
 	//j:=0
 	annotaionstring, _ := json.Marshal(annotationMap)
 	for i := 0; i < len(nodelist); i++ {
@@ -136,14 +136,15 @@ func rangeNodelist(nodelist []*v1.Node, t table.Writer, annotationMap map[string
 		ExternalIP := ""
 		items := nodelist[i]
 		for i:=0;i<len(items.Status.Addresses);i++{
-
+			if choice == "all"{
+				annotationMap=items.Annotations
+				annotaionstring, _ = json.Marshal(annotationMap)
+			}
 			if items.Status.Addresses[i].Type == "ExternalIP"{
 				ExternalIP = items.Status.Addresses[i].Address
-
 			}
 			InternalIp=items.Status.Addresses[0].Address
 		}
-
 
 		t.AppendRow([]interface{}{i + 1, items.Name, InternalIp, ExternalIP, "Yes", string(annotaionstring)})
 	}
