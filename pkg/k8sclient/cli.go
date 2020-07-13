@@ -111,24 +111,14 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 	t.SetOutputMirror(os.Stdout)
 
 	if len(annotationMap) == 0 {
-		// 考虑map
-		t.AppendHeader(table.Row{"id", "Nodename", "Nodeip", "ALl", "Annotations"})
-		for i := 0; i < len(nodelist); i++ {
-			items := nodelist[i]
-			annotationMap = items.Annotations
-			annotaionstring, _ := json.Marshal(annotationMap)
-			t.AppendRow([]interface{}{i + 1, items.Name, items.Status.Addresses[0].Address, "ALl", string(annotaionstring)})
-		}
 
+		t.AppendHeader(table.Row{"id", "Nodename", "INTERNAL-IP", "EXTERNAL-IP", "ALl", "Annotations"})
+		rangeNodelist(nodelist, t, annotationMap)
 		s = "k8s nodes has annotations:"
 	} else {
-		t.AppendHeader(table.Row{"id", "Nodename","INTERNAL-IP", "EXTERNAL-IP", "exit_or_no", "Given_Annotation"})
+		t.AppendHeader(table.Row{"id", "Nodename", "INTERNAL-IP", "EXTERNAL-IP", "exit_or_no", "Given_Annotation"})
 		annotaionstring, _ := json.Marshal(annotationMap)
-		for i := 0; i < len(nodelist); i++ {
-			items := nodelist[i]
-			t.AppendRow([]interface{}{i + 1, items.Name,items.Status.Addresses[0].Type ,items.Status.Addresses[0].Address, "Yes", string(annotaionstring)})
-		}
-
+		rangeNodelist(nodelist, t, annotationMap)
 		s = fmt.Sprintf("k8s nodes containing %s is", string(annotaionstring))
 	}
 
@@ -136,4 +126,24 @@ func (cli *Cli) AnnoNodePrint(nodelist []*v1.Node, ctx context.Context, annotati
 	t.AppendFooter(table.Row{"", "Total NOde", len(nodelist), ""})
 	t.Render()
 
+}
+
+func rangeNodelist(nodelist []*v1.Node, t table.Writer, annotationMap map[string]string) {
+
+	annotaionstring, _ := json.Marshal(annotationMap)
+	for i := 0; i < len(nodelist); i++ {
+		InternalIp := ""
+		ExternalIP := ""
+		items := nodelist[i]
+		if items.Status.Addresses[0].Type == "ExternalIP" {
+			ExternalIP = items.Status.Addresses[0].Address
+			InternalIp = items.Status.Addresses[1].Address
+		} else if items.Status.Addresses[1].Type == "ExternalIP" {
+			ExternalIP = items.Status.Addresses[1].Address
+			InternalIp = items.Status.Addresses[0].Address
+		} else {
+			InternalIp = items.Status.Addresses[0].Address
+		}
+		t.AppendRow([]interface{}{i + 1, items.Name, InternalIp, ExternalIP, "Yes", string(annotaionstring)})
+	}
 }
