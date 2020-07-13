@@ -3,20 +3,20 @@
 ---
 
 ### Purpose of writing this project
--  First
-I find it is too hard to use cmd kubectl to get node annotation in k8s cluster when k8s
-cluster has Tens of thousands Nodes in K8s cluster.if we wanna to get some node's annotation ,we alway use cmd` kubectl --kubeconfig=/root/.kube/devconfig  describe nodes |grep Annotation
+-  First,
+I find it is too hard to use command like  kubectl to get node annotation in k8s cluster when k8s
+cluster has Tens of thousands Nodes in K8s cluster.if we wanna get some node's annotation ,we alway use cmd ` kubectl --kubeconfig=/root/.kube/devconfig  describe nodes |grep Annotation
 ` in shell, it takes too many times.
 
 
-- Second 
-I am studying golang language recently,so i wanna to create a golang project to practicc
-programming by golang ,in this project i use the package like [cobra](https://github.com/spf13/cobra) ,[go-client](https://github.com/kubernetes/client-go) , [color](https://github.com/fatih/color) and so on.
+- Second ,
+I have been studying golang language recently,so i wanna create a  project to practice
+programming by golang ,in this project i use the package like [cobra](https://github.com/spf13/cobra) ,[client-go](https://github.com/kubernetes/client-go) , [color](https://github.com/fatih/color) and so on.
 
 ### How to use it 
 
 
-Follow the way cobra defines commands, use the Parent Commands、subcommands flags.
+Follow the way cobra defines commands, use the Parent Commands、subcommands 、flags.
 
 `./kubectl-addons get nodeanno -a "all"  -k /root/.kube/devconfig ` 
 
