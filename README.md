@@ -58,16 +58,14 @@ Global Flags:
 
 - get cluster-auto-scaler node that not be scaled down .
 
-![image-20200713210410861](README.assets/image-20200713210410861.png)
+![image-20200714091618432](README.assets/image-20200714091618432.png)
 
 
 
 - get all node's annotation in k8s  cluster
 
-![image-20200713210445028](README.assets/image-20200713210445028.png)
-
-
+![image-20200714091852718](README.assets/image-20200714091852718.png)
 
 - get some specify annotation by user
 
-![image-20200713210541322](README.assets/image-20200713210541322.png)
+![image-20200714091743995](README.assets/image-20200714091743995.png)
