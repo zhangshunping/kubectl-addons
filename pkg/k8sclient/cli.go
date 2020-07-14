@@ -32,7 +32,6 @@ func Initcli(kubeconfig *string) (Cli, error) {
 	//}
 	//flag.Parse()
 
-	fmt.Println(*kubeconfig)
 	// use the current context in kubeconfig
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
